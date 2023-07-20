@@ -1,24 +1,10 @@
 import { Button, Form, Input, DatePicker } from "antd";
-import { atom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { differenceInDays } from "date-fns";
 
 import React from "react";
-
-export enum TaskStatus {
-  NotUrgent = "Not Urgent",
-  DueSoon = "Due Soon",
-  Overdue = "Overdue",
-}
-
-export interface Task {
-  name: string;
-  description: string;
-  dueDate: string;
-  createAt: string;
-  status: TaskStatus;
-}
-
-export const taskAtom = atom<Task[]>([]);
+import { taskAtom } from "@/atoms/Task";
+import { Task, TaskStatus } from "@/atoms/Task/types";
 
 const Forms = () => {
   const [form] = Form.useForm();

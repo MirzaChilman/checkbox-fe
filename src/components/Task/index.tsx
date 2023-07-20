@@ -1,9 +1,10 @@
 import { useAtomValue } from "jotai";
-import { Task, TaskStatus, taskAtom } from "../Form";
 import { Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { displayedDate } from "@/helpers/date";
 import { useMemo } from "react";
+import { Task, TaskStatus } from "@/atoms/Task/types";
+import { taskAtom } from "@/atoms/Task";
 
 interface DataType extends Task {
   key: string;
