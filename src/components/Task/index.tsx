@@ -59,14 +59,7 @@ const columns: ColumnsType<DataType> = [
     render: (status) => {
       return (
         <Space>
-          <Button
-            type="primary"
-            style={{
-              backgroundColor: "#1677ff",
-            }}
-          >
-            Edit
-          </Button>
+          <Button type="primary">Edit</Button>
           <Button danger ghost>
             Delete
           </Button>
