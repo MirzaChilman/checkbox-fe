@@ -1,12 +1,15 @@
-import { Button, Form, Input, DatePicker } from "antd";
-import { useSetAtom } from "jotai";
-import { differenceInDays } from "date-fns";
-
 import React from "react";
+import { Button, Form, Input, DatePicker, notification } from "antd";
+import { useSetAtom } from "jotai";
 import { taskAtom } from "@/atoms/Task";
-import { Task, TaskStatus } from "@/atoms/Task/types";
+import { Task } from "@/atoms/Task/types";
+import { determineStatus } from "@/helpers/determineStatus";
+import useNotification from "@/hooks/useSearchUser/useNotification";
 
 const Forms = () => {
+  const { contextHolder, successNotification, errorNotification } =
+    useNotification();
+
   const [form] = Form.useForm();
   const setTask = useSetAtom(taskAtom);
 
@@ -14,32 +17,25 @@ const Forms = () => {
     const dueDate = new Date(values.dueDate);
     const currentDate = new Date();
 
-    const differenceDay = differenceInDays(dueDate, currentDate);
-
-    let status;
-
-    if (differenceDay < 0) {
-      status = TaskStatus.Overdue;
-    } else if (differenceDay < 7) {
-      status = TaskStatus.DueSoon;
-    } else {
-      status = TaskStatus.NotUrgent;
-    }
     const newTask: Task = {
       ...values,
       createAt: new Date().toISOString(),
-      status: status,
+      status: determineStatus({ dueDate, currentDate }),
     };
-
+    successNotification({
+      message: "Success create task",
+      description: `Task Name: ${values.name}`,
+    });
     setTask((prev) => [...prev, newTask]);
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    errorNotification(errorInfo);
   };
 
   return (
     <div className="mt-10">
+      {contextHolder}
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <Form
           layout="vertical"
