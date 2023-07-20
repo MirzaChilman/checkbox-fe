@@ -1,10 +1,11 @@
 import { useAtomValue } from "jotai";
-import { Table, Tag } from "antd";
+import { Button, Space, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { displayedDate } from "@/helpers/date";
 import { useMemo } from "react";
 import { Task, TaskStatus } from "@/atoms/Task/types";
 import { taskAtom } from "@/atoms/Task";
+import ButtonGroup from "antd";
 
 interface DataType extends Task {
   key: string;
@@ -49,6 +50,28 @@ const columns: ColumnsType<DataType> = [
     key: "status",
     render: (status) => {
       return <Tag color={TagStatus[status as TaskStatus]}>{status}</Tag>;
+    },
+  },
+  {
+    title: "Action",
+    dataIndex: "status",
+    key: "status",
+    render: (status) => {
+      return (
+        <Space>
+          <Button
+            type="primary"
+            style={{
+              backgroundColor: "#1677ff",
+            }}
+          >
+            Edit
+          </Button>
+          <Button danger ghost>
+            Delete
+          </Button>
+        </Space>
+      );
     },
   },
 ];
