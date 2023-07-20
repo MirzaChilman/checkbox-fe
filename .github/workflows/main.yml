@@ -10,10 +10,10 @@ jobs:
     name: Build an Push to GCP
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: atask-fe
+      IMAGE_NAME: checkbox-fe
       PROJECT_ID: general-website-390609
       REGION: asia-southeast2
-      REPO_NAME: atask-fe
+      REPO_NAME: checkbox-fe
 
     steps:
     - name: Checkout

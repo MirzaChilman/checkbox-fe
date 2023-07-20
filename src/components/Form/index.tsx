@@ -1,13 +1,51 @@
 import { Button, Form, Input, DatePicker } from "antd";
-import React, { useState, useRef } from "react";
+import { atom, useSetAtom } from "jotai";
+import { differenceInDays } from "date-fns";
 
-type LayoutType = Parameters<typeof Form>[0]["layout"];
+import React from "react";
+
+export enum TaskStatus {
+  NotUrgent = "Not Urgent",
+  DueSoon = "Due Soon",
+  Overdue = "Overdue",
+}
+
+export interface Task {
+  name: string;
+  description: string;
+  dueDate: string;
+  createAt: string;
+  status: TaskStatus;
+}
+
+export const taskAtom = atom<Task[]>([]);
 
 const Forms = () => {
   const [form] = Form.useForm();
+  const setTask = useSetAtom(taskAtom);
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const onFinish = (values: Omit<Task, "createAt" | "status">) => {
+    const dueDate = new Date(values.dueDate);
+    const currentDate = new Date();
+
+    const differenceDay = differenceInDays(dueDate, currentDate);
+
+    let status;
+
+    if (differenceDay < 0) {
+      status = TaskStatus.Overdue;
+    } else if (differenceDay < 7) {
+      status = TaskStatus.DueSoon;
+    } else {
+      status = TaskStatus.NotUrgent;
+    }
+    const newTask: Task = {
+      ...values,
+      createAt: new Date().toISOString(),
+      status: status,
+    };
+
+    setTask((prev) => [...prev, newTask]);
   };
 
   const onFinishFailed = (errorInfo: any) => {
