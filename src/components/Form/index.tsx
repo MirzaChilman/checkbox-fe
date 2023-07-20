@@ -1,53 +1,58 @@
-import { inputKeywordsAtom, searchedKeywordsAtom } from "@/atoms/Search";
-import { useAtom } from "jotai";
-import { Button, TextInput } from "flowbite-react";
-import useSearchUser from "@/hooks/useSearchUser";
-import React, { useEffect, useRef } from "react";
+import { Button, Form, Input, DatePicker } from "antd";
+import React, { useState, useRef } from "react";
 
-const Form = () => {
-  const [inputKeywords, setInputKeywords] = useAtom(inputKeywordsAtom);
-  const [searchedKeywords, setSearchedKeywords] = useAtom(searchedKeywordsAtom);
-  const { refetch } = useSearchUser();
-  const inputRef = useRef<HTMLInputElement>(null);
+type LayoutType = Parameters<typeof Form>[0]["layout"];
 
-  const handleFetchUser = () => {
-    setSearchedKeywords(inputKeywords);
+const Forms = () => {
+  const [form] = Form.useForm();
+
+  const onFinish = (values: any) => {
+    console.log("Success:", values);
   };
 
-  useEffect(() => {
-    if (Boolean(searchedKeywords)) {
-      refetch();
-    }
-  }, [refetch, searchedKeywords]);
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const isInputFocused = inputRef.current === document.activeElement;
-    if (event.key.toLowerCase() === "enter" && isInputFocused) {
-      handleFetchUser();
-    }
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
   };
 
   return (
     <div className="mt-10">
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <div className="mb-4">
-          <TextInput
-            id="username"
-            type="text"
-            placeholder="Username"
-            onKeyDown={handleKeyDown}
-            onChange={(e) => setInputKeywords(e.target.value.toLowerCase())}
-            ref={inputRef}
-          />
-        </div>
-        <div className="flex items-center justify-between">
-          <Button type="button" onClick={handleFetchUser}>
-            Search
-          </Button>
-        </div>
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+        >
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[{ required: true, message: "Please input your username!" }]}
+          >
+            <Input className="rounded-md" placeholder="Name" />
+          </Form.Item>
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[
+              { required: true, message: "Please input your description!" },
+            ]}
+          >
+            <Input className="rounded-md" placeholder="Description" />
+          </Form.Item>
+          <Form.Item
+            name="dueDate"
+            label="Due Date"
+            rules={[{ required: true, message: "Please input your due date!" }]}
+          >
+            <DatePicker />
+          </Form.Item>
+          <Form.Item>
+            <Button htmlType="submit">Submit</Button>
+          </Form.Item>
+        </Form>
       </div>
     </div>
   );
 };
 
-export default Form;
+export default Forms;
