@@ -1,10 +1,8 @@
-import { useAtomValue } from "jotai";
 import { Button, Space, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { displayedDate } from "@/helpers/date";
 import { useMemo } from "react";
 import { Task, TaskStatus } from "@/atoms/Task/types";
-import { taskAtom } from "@/atoms/Task";
 import useTaskQuery from "@/hooks/useTask/query";
 
 interface DataType extends Task {
@@ -82,10 +80,7 @@ const columns: ColumnsType<DataType> = [
 ];
 
 const TaskList = () => {
-  const tasks = useAtomValue(taskAtom);
   const { data } = useTaskQuery();
-
-  console.log({ data });
 
   const taskToTableData = useMemo(() => {
     return (data || [])?.map((task) => {
