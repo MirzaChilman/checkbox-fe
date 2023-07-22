@@ -5,15 +5,24 @@ import { displayedDate } from "@/helpers/date";
 import { useMemo } from "react";
 import { Task, TaskStatus } from "@/atoms/Task/types";
 import { taskAtom } from "@/atoms/Task";
+import useTaskQuery from "@/hooks/useTask/query";
 
 interface DataType extends Task {
   key: string;
 }
 
-const TagStatus: { [x in TaskStatus]: string } = {
-  [TaskStatus.DueSoon]: "yellow",
-  [TaskStatus.Overdue]: "red",
-  [TaskStatus.NotUrgent]: "blue",
+const getStatusColor = (status: TaskStatus) => {
+  const current = TaskStatus[status as keyof typeof TaskStatus];
+  switch (current) {
+    case TaskStatus.DueSoon:
+      return "yellow";
+    case TaskStatus.Overdue:
+      return "red";
+    case TaskStatus.NotUrgent:
+      return "blue";
+    default:
+      return "light";
+  }
 };
 
 const columns: ColumnsType<DataType> = [
@@ -29,10 +38,10 @@ const columns: ColumnsType<DataType> = [
   },
   {
     title: "Created At",
-    dataIndex: "createAt",
-    key: "createAt",
+    dataIndex: "createDate",
+    key: "createDate",
     render: (date) => {
-      return displayedDate(date);
+      return date ? displayedDate(date) : "";
     },
   },
   {
@@ -40,7 +49,7 @@ const columns: ColumnsType<DataType> = [
     dataIndex: "dueDate",
     key: "dueDate",
     render: (date) => {
-      return displayedDate(date);
+      return date ? displayedDate(date) : "";
     },
   },
   {
@@ -48,7 +57,11 @@ const columns: ColumnsType<DataType> = [
     dataIndex: "status",
     key: "status",
     render: (status) => {
-      return <Tag color={TagStatus[status as TaskStatus]}>{status}</Tag>;
+      return (
+        <Tag color={getStatusColor(status)}>
+          {TaskStatus[status as keyof typeof TaskStatus]}
+        </Tag>
+      );
     },
   },
   {
@@ -70,15 +83,18 @@ const columns: ColumnsType<DataType> = [
 
 const TaskList = () => {
   const tasks = useAtomValue(taskAtom);
+  const { data } = useTaskQuery();
+
+  console.log({ data });
 
   const taskToTableData = useMemo(() => {
-    return tasks.map((task) => {
+    return (data || [])?.map((task) => {
       return {
         ...task,
         key: task.name.toLocaleLowerCase(),
       };
     });
-  }, [tasks]);
+  }, [data]);
 
   return (
     <>
