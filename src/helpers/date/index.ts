@@ -1,5 +1,5 @@
-import { format } from "date-fns";
+import dayjs from "dayjs";
 
 export const displayedDate = (date: Date = new Date()) => {
-  return format(new Date(date), "yyyy-mm-dd");
+  return dayjs(new Date(date)).format("YYYY, MMMM DD");
 };

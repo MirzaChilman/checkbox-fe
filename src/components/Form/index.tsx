@@ -1,21 +1,24 @@
 import React from "react";
-import { Button, Form, Input, DatePicker, notification } from "antd";
+import { Button, Form, Input, DatePicker } from "antd";
 import { useSetAtom } from "jotai";
 import { taskAtom } from "@/atoms/Task";
 import { Task } from "@/atoms/Task/types";
 import { determineStatus } from "@/helpers/determineStatus";
 import useNotification from "@/hooks/useSearchUser/useNotification";
+import useTaskMutation from "@/hooks/useTask/mutation";
+import dayjs from "dayjs";
 
 const Forms = () => {
   const { contextHolder, successNotification, errorNotification } =
     useNotification();
+  const { mutate } = useTaskMutation();
 
   const [form] = Form.useForm();
   const setTask = useSetAtom(taskAtom);
 
   const onFinish = (values: Omit<Task, "createAt" | "status">) => {
-    const dueDate = new Date(values.dueDate);
-    const currentDate = new Date();
+    const dueDate = dayjs(values.dueDate);
+    const currentDate = dayjs();
 
     const newTask: Task = {
       ...values,
@@ -27,6 +30,7 @@ const Forms = () => {
       description: `Task Name: ${values.name}`,
     });
     setTask((prev) => [...prev, newTask]);
+    mutate();
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -67,7 +71,9 @@ const Forms = () => {
             <DatePicker />
           </Form.Item>
           <Form.Item>
-            <Button htmlType="submit">Submit</Button>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
           </Form.Item>
         </Form>
       </div>

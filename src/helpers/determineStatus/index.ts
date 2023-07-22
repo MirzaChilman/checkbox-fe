@@ -1,16 +1,16 @@
 import { TaskStatus } from "@/atoms/Task/types";
-import { differenceInDays } from "date-fns";
+import dayjs, { Dayjs } from "dayjs";
 
 interface Props {
-  currentDate: Date;
-  dueDate: Date;
+  currentDate: Dayjs;
+  dueDate: Dayjs;
 }
 
 export const determineStatus = ({
   currentDate,
   dueDate,
 }: Props): TaskStatus => {
-  const differenceDay = differenceInDays(dueDate, currentDate);
+  const differenceDay = dayjs(dueDate).diff(dayjs(currentDate));
 
   let status;
 
