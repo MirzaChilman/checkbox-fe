@@ -1,4 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
+import { FormTask } from "@/atoms/Task/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import request, { gql } from "graphql-request";
 
 const graph = gql`
@@ -20,15 +21,16 @@ const graph = gql`
 `;
 
 const useTaskMutation = () => {
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationKey: ["useMutations"],
-    mutationFn: async () => {
-      const temp = {
-        name: "mirza test",
-        description: "desc",
-        dueDate: "2023-09-22",
-      };
-      return await request("http://localhost:3001/graphql", graph, temp);
+    mutationFn: async (data: FormTask) => {
+      return await request("http://localhost:3001/graphql", graph, data);
+    },
+    onSuccess: () => {
+      queryClient.refetchQueries({
+        queryKey: ["useTaskQuery"],
+      });
     },
   });
 

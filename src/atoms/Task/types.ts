@@ -14,3 +14,5 @@ export interface Task {
   createAt: string | Dayjs;
   status: TaskStatus;
 }
+
+export type FormTask = Pick<Task, "name" | "description" | "dueDate">;

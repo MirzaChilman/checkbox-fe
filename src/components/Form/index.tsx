@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Form, Input, DatePicker } from "antd";
 import { useSetAtom } from "jotai";
 import { taskAtom } from "@/atoms/Task";
-import { Task } from "@/atoms/Task/types";
+import { FormTask, Task } from "@/atoms/Task/types";
 import { determineStatus } from "@/helpers/determineStatus";
 import useNotification from "@/hooks/useSearchUser/useNotification";
 import useTaskMutation from "@/hooks/useTask/mutation";
@@ -14,23 +14,13 @@ const Forms = () => {
   const { mutate } = useTaskMutation();
 
   const [form] = Form.useForm();
-  const setTask = useSetAtom(taskAtom);
 
-  const onFinish = (values: Omit<Task, "createAt" | "status">) => {
-    const dueDate = dayjs(values.dueDate);
-    const currentDate = dayjs();
-
-    const newTask: Task = {
-      ...values,
-      createAt: new Date().toISOString(),
-      status: determineStatus({ dueDate, currentDate }),
-    };
+  const onFinish = (values: FormTask) => {
     successNotification({
       message: "Success create task",
       description: `Task Name: ${values.name}`,
     });
-    setTask((prev) => [...prev, newTask]);
-    mutate();
+    mutate(values);
   };
 
   const onFinishFailed = (errorInfo: any) => {
