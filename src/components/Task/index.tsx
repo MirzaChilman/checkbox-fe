@@ -5,7 +5,6 @@ import { displayedDate } from "@/helpers/date";
 import { useMemo } from "react";
 import { Task, TaskStatus } from "@/atoms/Task/types";
 import { taskAtom } from "@/atoms/Task";
-import ButtonGroup from "antd";
 
 interface DataType extends Task {
   key: string;
@@ -53,10 +52,10 @@ const columns: ColumnsType<DataType> = [
     },
   },
   {
-    title: "Action",
-    dataIndex: "status",
-    key: "status",
-    render: (status) => {
+    title: "Actions",
+    dataIndex: "actions",
+    key: "actions",
+    render: () => {
       return (
         <Space>
           <Button type="primary">Edit</Button>
@@ -81,7 +80,11 @@ const TaskList = () => {
     });
   }, [tasks]);
 
-  return <Table dataSource={taskToTableData} columns={columns} />;
+  return (
+    <>
+      <Table dataSource={taskToTableData} columns={columns} />
+    </>
+  );
 };
 
 export default TaskList;
