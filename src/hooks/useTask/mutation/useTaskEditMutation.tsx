@@ -3,13 +3,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import request, { gql } from "graphql-request";
 
 const graph = gql`
-  mutation createTask(
-    $name: String!
-    $description: String!
-    $dueDate: String!
+  mutation updateTask(
+    $id: Int!
+    $name: String
+    $description: String
+    $dueDate: String
   ) {
-    createTask(
-      createTaskInput: {
+    updateTask(
+      updateTaskInput: {
+        id: $id
         name: $name
         description: $description
         dueDate: $dueDate
@@ -20,11 +22,11 @@ const graph = gql`
   }
 `;
 
-const useTaskMutation = () => {
+const useTaskEditMutation = () => {
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
-    mutationKey: ["useMutations"],
-    mutationFn: async (data: FormTask) => {
+    mutationKey: ["useTaskEditMutation"],
+    mutationFn: async (data: FormTask & { id: number }) => {
       return await request("http://localhost:3001/graphql", graph, data);
     },
     onSuccess: () => {
@@ -39,4 +41,4 @@ const useTaskMutation = () => {
   };
 };
 
-export default useTaskMutation;
+export default useTaskEditMutation;

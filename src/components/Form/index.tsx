@@ -1,17 +1,13 @@
 import React from "react";
 import { Button, Form, Input, DatePicker } from "antd";
-import { useSetAtom } from "jotai";
-import { taskAtom } from "@/atoms/Task";
-import { FormTask, Task } from "@/atoms/Task/types";
-import { determineStatus } from "@/helpers/determineStatus";
+import { FormTask } from "@/atoms/Task/types";
 import useNotification from "@/hooks/useSearchUser/useNotification";
-import useTaskMutation from "@/hooks/useTask/mutation";
-import dayjs from "dayjs";
+import useTaskCreateMutation from "@/hooks/useTask/mutation/useTaskCreateMutation";
 
 const Forms = () => {
   const { contextHolder, successNotification, errorNotification } =
     useNotification();
-  const { mutate } = useTaskMutation();
+  const { mutate } = useTaskCreateMutation();
 
   const [form] = Form.useForm();
 
@@ -20,6 +16,7 @@ const Forms = () => {
       message: "Success create task",
       description: `Task Name: ${values.name}`,
     });
+    form.resetFields();
     mutate(values);
   };
 

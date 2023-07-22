@@ -2,6 +2,7 @@ import { Task } from "@/atoms/Task/types";
 import { Modal, Form, Input, DatePicker } from "antd";
 import { useEffect } from "react";
 import dayjs from "dayjs";
+import useTaskEditMutation from "@/hooks/useTask/mutation/useTaskEditMutation";
 interface Props {
   open: boolean;
   selectedTask: Task | null;
@@ -9,12 +10,10 @@ interface Props {
 }
 
 const EditModal = ({ open, selectedTask, setSelectedTask }: Props) => {
-  const [form] = Form.useForm<Pick<Task, "name" | "description" | "dueDate">>();
-
+  const [form] = Form.useForm<Task>();
+  const { mutate } = useTaskEditMutation();
   useEffect(() => {
     if (selectedTask) {
-      console.log({ selectedTask });
-
       form.setFieldsValue({
         name: selectedTask.name,
         description: selectedTask.description,
@@ -23,13 +22,22 @@ const EditModal = ({ open, selectedTask, setSelectedTask }: Props) => {
     }
   }, [form, selectedTask]);
 
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    const data = {
+      id: selectedTask?.id || 0,
+      name: form.getFieldValue("name"),
+      description: form.getFieldValue("description"),
+      dueDate: form.getFieldValue("dueDate"),
+    };
+    await mutate(data);
+    handleClose();
+  };
   const handleClose = () => {
     setSelectedTask(null);
   };
 
   return (
-    <Modal open={open} onCancel={handleClose}>
+    <Modal open={open} onCancel={handleClose} onOk={handleSubmit}>
       <Form
         layout="vertical"
         form={form}
