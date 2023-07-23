@@ -20,7 +20,7 @@ const useTaskQuery = () => {
     queryKey: ["useTaskQuery"],
     queryFn: async () => {
       const response = await request(
-        "http://localhost:3001/graphql",
+        process.env.NEXT_PUBLIC_BASE_URL || "",
         allFilmsWithVariablesQueryDocument
       );
 

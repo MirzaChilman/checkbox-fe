@@ -28,7 +28,7 @@ const useTaskCreateMutation = () => {
       return await request("http://localhost:3001/graphql", graph, data);
     },
     onSuccess: () => {
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: ["useTaskQuery"],
       });
     },

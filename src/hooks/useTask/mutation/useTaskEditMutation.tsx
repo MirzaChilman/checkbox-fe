@@ -27,10 +27,10 @@ const useTaskEditMutation = () => {
   const { mutate } = useMutation({
     mutationKey: ["useTaskEditMutation"],
     mutationFn: async (data: FormTask & { id: number }) => {
-      return await request("http://localhost:3001/graphql", graph, data);
+      return await request(process.env.NEXT_PUBLIC_BASE_URL || "", graph, data);
     },
     onSuccess: () => {
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: ["useTaskQuery"],
       });
     },
