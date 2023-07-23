@@ -79,9 +79,6 @@ const TaskList = () => {
               <Button type="primary" onClick={() => setSelectedTask(records)}>
                 Edit
               </Button>
-              <Button danger ghost>
-                Delete
-              </Button>
             </Space>
           );
         },
