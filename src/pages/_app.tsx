@@ -36,7 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <Hydrate state={pageProps.dehydratedState}>
           <Head>
-            <title>Atask</title>
+            <title>Checkbox</title>
           </Head>
           <div className={notoSans.className}>
             <Navbar />
