@@ -97,7 +97,6 @@ const TaskList = () => {
 
   return (
     <>
-      {JSON.stringify(selectedTask)}
       <Table dataSource={taskToTableData} columns={columns} />
       <EditModal
         open={Boolean(selectedTask)}
