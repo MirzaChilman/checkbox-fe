@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Form, Input, DatePicker } from "antd";
 import { FormTask } from "@/atoms/Task/types";
-import useNotification from "@/hooks/useSearchUser/useNotification";
+import useNotification from "@/hooks/useNotification";
 import useTaskCreateMutation from "@/hooks/useTask/mutation/useTaskCreateMutation";
 
 const Forms = () => {
